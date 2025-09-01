@@ -16,7 +16,9 @@ function App() {
 
   return (
     <div className="font-sans">
-      <Hero cart={cart} />
+      <Hero cart={cart} onCartClick={function (): void {
+        throw new Error("Function not implemented.");
+      } } />
       <About />
       <Services />
       <Cars cart={cart} setCart={setCart} />
