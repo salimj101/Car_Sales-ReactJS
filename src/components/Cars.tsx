@@ -1,10 +1,19 @@
 import { useState } from "react";
 
-interface CarsProps {
-  setCartItems: React.Dispatch<React.SetStateAction<number>>;
+export interface Car {
+  id: number;
+  name: string;
+  model: string;
+  quantity: number;
+  image: string;
 }
 
-const Cars: React.FC<CarsProps> = ({ setCartItems }) => {
+interface CarsProps {
+  cart: Car[];
+  setCart: React.Dispatch<React.SetStateAction<Car[]>>;
+}
+
+const Cars: React.FC<CarsProps> = ({ cart, setCart }) => {
   const [cars, setCars] = useState([
     {
       id: 1,
@@ -42,7 +51,19 @@ const Cars: React.FC<CarsProps> = ({ setCartItems }) => {
   const addToCart = (id: number) => {
     const car = cars.find((car) => car.id === id);
     if (car && car.quantity > 0) {
-      setCartItems((prev) => prev + car.quantity);
+      // Check if car is already in cart
+      const existing = cart.find((item) => item.id === id);
+      if (existing) {
+        setCart(
+          cart.map((item) =>
+            item.id === id
+              ? { ...item, quantity: item.quantity + car.quantity }
+              : item
+          )
+        );
+      } else {
+        setCart([...cart, { ...car }]);
+      }
       updateQuantity(id, -car.quantity);
     }
   };
